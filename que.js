@@ -5,6 +5,36 @@ class QueueNode {
   }
 }
 
+class Stack {
+  constructor() {
+    this.top = null;
+    this.length = 0;
+  }
+
+  push(item) {
+    if (this.top === null) {
+      this.top = item;
+      this.length += 1;
+    } else {
+      item.next = this.top;
+      this.top = item;
+      this.length += 1;
+    }
+    return this.length;
+  }
+
+  pop() {
+    if (this.top === null) {
+      console.log("missed it");
+      return null;
+    }
+    let tobeRemoved = this.top;
+    this.top = tobeRemoved.next;
+    this.length -= 1;
+    return tobeRemoved;
+  }
+}
+
 class Queue {
   constructor() {
     this.head = null;
@@ -102,23 +132,98 @@ class Queue {
       this.enqueue(vals[i]);
     }
   }
+
+  enqueueNode(newData) {
+    if (this.isEmpty()) {
+      this.head = newData;
+      this.tail = newData;
+      this.size++;
+      return this.size;
+    }
+    this.tail.next = newData;
+    this.tail = newData;
+    this.size++;
+    return this.size;
+  }
+  /**
+   * Compares this queue to another given queue to see if they are equal.
+   * Avoid indexing the queue items directly via bracket notation, use the
+   * queue methods instead for practice.
+   * Use no extra array or objects.
+   * The queues should be returned to their original order when done.
+   * - Time: O(?).
+   * - Space: O(?).
+   * @param {Queue} q2 The queue to be compared against this queue.
+   * @returns {boolean} Whether all the items of the two queues are equal and
+   *    in the same order.
+   */
+  compareQueues(q2) {
+    if (this.size != q2.size) {
+      return false;
+    }
+    let runner1 = this.head;
+    let runner2 = q2.head;
+
+    while (runner1.next) {
+      if (runner1.data != runner2.data) {
+        return false;
+      }
+      runner1 = runner1.next;
+      runner2 = runner2.next;
+    }
+    if (this.tail.data != q2.tail.data) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Determines if the queue is a palindrome (same items forward and backwards).
+   * Avoid indexing queue items directly via bracket notation, instead use the
+   * queue methods for practice.
+   * Use only 1 stack as additional storage, no other arrays or objects.
+   * The queue should be returned to its original order when done.
+   * - Time: O(?).
+   * - Space: O(?).
+   * @returns {boolean}
+   */
+  isPalindrome() {
+    // not working trymore
+    let midPoint = Math.ceil(this.size / 2);
+    let stack = new Stack();
+    let runner = this.head;
+    while (runner.next) {
+      stack.push(runner);
+      runner = runner.next;
+    }
+
+    let testRunner = this.head;
+    for (let i = 0; i < this.size; i++) {
+      let temp = stack.pop().data;
+      console.log(testRunner.data + " and " + temp);
+      if (testRunner.data != temp) {
+        return false;
+      }
+      testRunner = testRunner.next;
+    }
+    return true;
+  }
+
+  /**
+   * Find the intersection in between 2 queues
+   * If there is no intersection return a null value
+   * If the is an intersection return the node where the queues intersect
+   * - Time: O(?).
+   * - Space: O(?).
+   * @param {Queue} q2 The queue to be compared against this queue to find intersection.
+   * @returns {QueueNode} Null in case of no intersection
+   */
+  findIntersection(q2) {}
 }
 
-let myQueue = new Queue();
-console.log(myQueue);
+let myQueue1 = new Queue();
+let myQueue2 = new Queue();
+myQueue1.seed([2, 3, 4, 5, 6]);
+myQueue2.seed([2, 3, 4, 3, 3]);
 
-myQueue.enqueue(5);
-console.log(myQueue);
-myQueue.dequeue();
-console.log(myQueue);
-myQueue.enqueue(6);
-console.log(myQueue);
-myQueue.enqueue(7);
-console.log(myQueue);
-myQueue.enqueue(8);
-console.log(myQueue);
-myQueue.dequeue();
-console.log(myQueue);
-console.log(myQueue.contains(10));
-myQueue.seed([11, 12, 22, 1, 2, 3]);
-console.log(myQueue);
+console.log(myQueue2.isPalindrome());
